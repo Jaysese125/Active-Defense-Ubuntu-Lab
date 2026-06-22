@@ -10,7 +10,6 @@
 * 🟢 Phase 2: Active IPS — COMPLETED
 * 🟢 Phase 3: Recon & Perimeter Audit (Nmap) — COMPLETED (Validated)
 * 🟢 Phase 4: Network Packet Forensics (Wireshark + tcpdump) — COMPLETED & VALIDATED
-* 🔵 Phase 5: SIEM (Splunk) — PLANNED
 
 ---
 
@@ -161,17 +160,17 @@ nmap -sV 192.168.1.200
 
 #### 🧪 Key Validation Experiment
 
-**1. ICMP Echo Test (Windows → VM)**
+1. ICMP Echo Test (Windows → VM)
 - Command: ping -4 192.168.1.200
 - Result: ✅ 0% packet loss, stable replies, low latency (RTT <1ms to 1ms).
 
-**2. Wireshark Capture Results**
+2. Wireshark Capture Results
 - Observed Frames:
   - 192.168.1.37 → 192.168.1.200 ICMP Echo Request
   - 192.168.1.200 → 192.168.1.37 ICMP Echo Reply
 - Conclusion: ✅ Full bidirectional ICMP flow confirmed.
 
-**3. tcpdump Ground Truth Validation (VM)**
+3. tcpdump Ground Truth Validation (VM)
 - Command: sudo tcpdump -n icmp
 - Observed Output:
   - IP 192.168.1.37 > 192.168.1.200: ICMP echo request
@@ -196,21 +195,7 @@ nmap -sV 192.168.1.200
 This phase establishes the foundational visibility required for:
 - Intrusion detection (seeing malicious packets in real‑time).
 - Network troubleshooting (isolating Layer 3 issues).
-- Correlating packet‑level events with SIEM logs (Phase 5).
-
----
-
-### 📊 Phase 5: Distributed Enterprise SIEM Data Analytics (Splunk)
-
-* 📊 Status: SLATED FOR EXECUTION
-* 🚀 Core Tooling: Splunk Enterprise Core / Universal Forwarder Architecture
-
-#### 🎯 Project Objectives
-
-* 🗄️ Centralised Aggregation: Spin up a secondary Virtual Machine running Splunk Enterprise to act as a centralised Security Operations Center (SOC) hub.
-* 🚚 Forwarder Provisioning: Deploy lightweight Splunk Universal Forwarders to pipeline /var/log/nginx/access.log and /var/log/fail2ban.log securely to the indexer.
-* 📈 Dashboard Engineering: Write custom Splunk Processing Language (SPL) searches to build live dashboard visualisations mapping geo‑IP intelligence and firewall drop counts.
-* 🚨 Alerting Pipeline: Configure real‑time alerts for high‑frequency scanning events or repeated ban triggers.
+- Correlating packet‑level events with dynamic defensive actions.
 
 ---
 
@@ -284,6 +269,6 @@ This phase establishes the foundational visibility required for:
 * 💻 Symptom: Expected -Pn to force a port scan regardless of host status, but it was used incorrectly alongside -sn (which disables port scanning entirely).
 * ✅ Resolution: Learned that -sn is a pure host‑discovery flag that skips port scanning; -Pn disables host discovery but still performs port scanning. Used "-Pn -sS" together to scan a target presumed alive without preliminary ping probes.
 
-#### 18. 🛑 Problem: Wireshark Interface Selection Confusion (Phase 4)
+#### 18. 🛑 Problem: Wireshark Interface Selection Confusion
 * 💻 Symptom: ICMP packets were visible in tcpdump on the VM and in ping replies, but Wireshark on Windows showed nothing for the icmp filter.
 * ✅ Resolution: Identified that Wireshark was capturing on a VirtualBox adapter or a non‑active Ethernet interface. Switched to the correct Ethernet adapter associated with the host IP (192.168.1.37), restarted capture, and immediately observed bidirectional ICMP traffic. Cross‑validated with tcpdump to confirm the OS was indeed receiving the packets.
